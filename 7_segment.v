@@ -26,7 +26,7 @@ module seven_segment (
 			5'd5:  begin hex_segments = 7'b0010010;  end // 5
 			5'd6:  begin hex_segments = 7'b0000010;  end // 6
 			default: begin
-				 hex_segments = 7'b1111111;
+				 hex_segments = 7'b1000000;
 			end
 		endcase
 		
