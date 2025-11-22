@@ -16,22 +16,20 @@ module seven_segment (
 	reg[6:0] hex2_segments;
 	reg[6:0] hex3_segments;
 	
-	function [6:0] hex_segments;
-		input [2:0] d;
-		case (d)
-			5'd1:  begin hex_segments = 7'b1111001; end // 1
-			5'd2:  begin hex_segments = 7'b0100100; end // 2
-			5'd3:  begin hex_segments = 7'b0110000; end // 3
-			5'd4:  begin hex_segments = 7'b0011001; end // 4
-			5'd5:  begin hex_segments = 7'b0010010;  end // 5
-			5'd6:  begin hex_segments = 7'b0000010;  end // 6
-			default: begin
-				 hex_segments = 7'b1000000;
-			end
-		endcase
-		
-		
-	endfunction
+	    function [6:0] hex_segments;
+        input [2:0] d;
+        begin
+            case (d)
+                3'd0: hex_segments = 7'b1000000; // 0
+                3'd1: hex_segments = 7'b1111001; // 1
+                3'd2: hex_segments = 7'b0100100; // 2
+                3'd3: hex_segments = 7'b0110000; // 3
+                3'd4: hex_segments = 7'b0011001; // 4
+                3'd5: hex_segments = 7'b0010010; // 5
+                default: hex_segments = 7'b0111111; // "-" for invalid (guess > 5)
+            endcase
+        end
+    endfunction
 	
 
 	always @(d0, d1, d2, d3) begin
