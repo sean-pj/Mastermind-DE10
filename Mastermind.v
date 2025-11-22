@@ -52,6 +52,7 @@ module Mastermind(
 			if (d0 == s0) begin
 				LEDreg[2] = 1;
 				w0 = 3'd7; // If a number is in the correct position, it should be removed from white peg
+			end
 			if (d1 == s1) begin
 				LEDreg[3] = 1;
 				w1 = 3'd7;
