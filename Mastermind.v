@@ -56,14 +56,10 @@ module Mastermind(
 	
 	initial begin
 		rnd = 8'hA5;
-//		s0 = s0_rand;
-//		s1 = s1_rand;
-//		s2 = s2_rand;
-//		s3 = s3_rand;
-		s0 = 3'd4;
-		s1 = 3'd1;
-		s2 = 3'd3;
-		s3 = 3'd3;
+		s0 = s0_rand;
+		s1 = s1_rand;
+		s2 = s2_rand;
+		s3 = s3_rand;
 	end
 	
 	always @(negedge KEY[1]) begin
@@ -81,12 +77,7 @@ module Mastermind(
 		  
 		  wp_count = 0;
 		  bp_count = 0;
-		  
-		  // Error handling if player inputs guess greater than 5
-//		  d0 = d0 > 3'd5 ? 3'bxxx : d0;
-//		  d1 = d1 > 3'd5 ? 3'bxxx : d1;
-//		  d2 = d2 > 3'd5 ? 3'bxxx : d2;
-//		  d3 = d3 > 3'd5 ? 3'bxxx : d3;  
+		   
 
         // Win condition
         if ({d0, d1, d2, d3} == {s0, s1, s2, s3}) begin
@@ -116,21 +107,6 @@ module Mastermind(
                 bp_count = bp_count + 1;
                 w3 = 3'd7;
             end
-				
-//				if (w0 != 3'd7) begin
-//					white_peg(d0);
-//				end
-//				if (w1 != 3'd7) begin
-//					white_peg(d1);
-//				end
-//				if (w2 != 3'd7) begin
-//					white_peg(d2);
-//				end
-//				if (w3 != 3'd7) begin
-//					white_peg(d3);
-//				end
-				
-				
 
             // White pegs
 				if (d0 != s0) begin 
@@ -161,7 +137,6 @@ end
 				// Turn on LED for white peg, but use wp_count to avoid revealing order
 				wp_count = wp_count + 1;
 				// Any repeats of the number should be removed, only one possible white peg per number
-				//remove_value(w0);
 				match = 1;
 			end else if (guess == w1 && w1 != 3'd7) begin
 				wp_count = wp_count + 1;
@@ -185,30 +160,6 @@ end
 			if (w3 == guess)
 				w3 = 3'd7;
 		end
-	
-//		case (num)
-//			w0: begin
-//				// Turn on LED for white peg, but use wp_count to avoid revealing order
-//				wp_count = wp_count + 1;
-//				// Any repeats of the number should be removed, only one possible white peg per number
-//				remove_value(w0);
-//			end
-//			w1: begin
-//				wp_count = wp_count + 1;
-//				remove_value(w1);
-//			end
-//			w2: begin
-//				wp_count = wp_count + 1;
-//				remove_value(w2);
-//			end
-//			w3: begin
-//				wp_count = wp_count + 1;
-//				remove_value(w3);
-//			end
-//			default: begin
-//				wp_count = wp_count;
-//			end
-//		endcase
 	
 	endtask
 	
@@ -242,10 +193,10 @@ end
 		if (SW[2:0] != prev_sw) begin
         prev_sw <= SW[2:0];
         case(i)
-            0: d0 <= SW[2:0];
-            1: d1 <= SW[2:0];
-            2: d2 <= SW[2:0];
-            3: d3 <= SW[2:0];
+            0: d0 <= SW[2:0] > 3'd5 ? 3'd0 : SW[2:0];
+            1: d1 <= SW[2:0] > 3'd5 ? 3'd0 : SW[2:0];
+            2: d2 <= SW[2:0] > 3'd5 ? 3'd0 : SW[2:0];
+            3: d3 <= SW[2:0] > 3'd5 ? 3'd0 : SW[2:0];
         endcase
 		end
 	end
