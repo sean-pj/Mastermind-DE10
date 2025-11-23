@@ -60,10 +60,10 @@ module Mastermind(
 //		s1 = s1_rand;
 //		s2 = s2_rand;
 //		s3 = s3_rand;
-		s0 = 3'd0;
-		s1 = 3'd5;
-		s2 = 3'd1;
-		s3 = 3'd5;
+		s0 = 3'd4;
+		s1 = 3'd1;
+		s2 = 3'd3;
+		s3 = 3'd3;
 	end
 	
 	always @(negedge KEY[1]) begin
@@ -83,10 +83,10 @@ module Mastermind(
 		  bp_count = 0;
 		  
 		  // Error handling if player inputs guess greater than 5
-		  d0 = d0 > 3'd5 ? 3'bxxx : d0;
-		  d1 = d1 > 3'd5 ? 3'bxxx : d1;
-		  d2 = d2 > 3'd5 ? 3'bxxx : d2;
-		  d3 = d3 > 3'd5 ? 3'bxxx : d3;  
+//		  d0 = d0 > 3'd5 ? 3'bxxx : d0;
+//		  d1 = d1 > 3'd5 ? 3'bxxx : d1;
+//		  d2 = d2 > 3'd5 ? 3'bxxx : d2;
+//		  d3 = d3 > 3'd5 ? 3'bxxx : d3;  
 
         // Win condition
         if ({d0, d1, d2, d3} == {s0, s1, s2, s3}) begin
@@ -103,46 +103,79 @@ module Mastermind(
             if (d0 == s0) begin
 				    bp_count = bp_count + 1;
                 w0 = 3'd7;
-            end else begin
-					wp_count = wp_count + white_peg(d0);
-				end
+            end
             if (d1 == s1) begin
 					 bp_count = bp_count + 1;
                 w1 = 3'd7;
-            end else begin
-					wp_count = wp_count + white_peg(d1);
-				end
+            end
             if (d2 == s2) begin
                 bp_count = bp_count + 1;
                 w2 = 3'd7;
-            end else begin
-					wp_count = wp_count + white_peg(d2);
-				end
+            end
             if (d3 == s3) begin
                 bp_count = bp_count + 1;
                 w3 = 3'd7;
-            end else begin
-					wp_count = wp_count + white_peg(d3);
-				end
+            end
+				
+//				if (w0 != 3'd7) begin
+//					white_peg(d0);
+//				end
+//				if (w1 != 3'd7) begin
+//					white_peg(d1);
+//				end
+//				if (w2 != 3'd7) begin
+//					white_peg(d2);
+//				end
+//				if (w3 != 3'd7) begin
+//					white_peg(d3);
+//				end
+				
+				
 
-//            // White pegs
-//            white_peg(d0);
-//            white_peg(d1);
-//            white_peg(d2);
-//            white_peg(d3);
+            // White pegs
+				if (d0 != s0) begin 
+					white_peg(d0);
+				end
+				if (d1 != s1) begin 
+					white_peg(d1);
+				end
+				if (d2 != s2) begin 
+					white_peg(d2);
+				end
+				if (d3 != s3) begin
+					white_peg(d3);
+				end
+           
         end
     end
 end
 
 	
-	function [2:0] white_peg;
+	task white_peg;
 		input [2:0] guess;
 		
-		if (guess == w0) begin
-			// Turn on LED for white peg, but use wp_count to avoid revealing order
-			white_peg = 3'd1;
-			// Any repeats of the number should be removed, only one possible white peg per number
-			//remove_value(w0);
+		reg match = 0;
+		
+		if (guess != 3'd7) begin
+			if (guess == w0 && w0 != 3'd7) begin
+				// Turn on LED for white peg, but use wp_count to avoid revealing order
+				wp_count = wp_count + 1;
+				// Any repeats of the number should be removed, only one possible white peg per number
+				//remove_value(w0);
+				match = 1;
+			end else if (guess == w1 && w1 != 3'd7) begin
+				wp_count = wp_count + 1;
+				match = 1;
+			end else if (guess == w2 && w2 != 3'd7) begin
+				wp_count = wp_count + 1;
+				match = 1;
+			end else if (guess == w3 && w3 != 3'd7) begin
+				wp_count = wp_count + 1;
+				match = 1;
+			end 
+		end
+	
+		if (match == 1) begin
 			if (w0 == guess)
 				w0 = 3'd7;
 			if (w1 == guess)
@@ -151,37 +184,7 @@ end
 				w2 = 3'd7;
 			if (w3 == guess)
 				w3 = 3'd7;
-		end else if (guess == w1) begin
-			white_peg = 3'd1;
-			if (w0 == guess)
-				w0 = 3'd7;
-			if (w1 == guess)
-				w1 = 3'd7;
-			if (w2 == guess)
-				w2 = 3'd7;
-			if (w3 == guess)
-				w3 = 3'd7;
-		end else if (guess == w2) begin
-			white_peg = 3'd1;
-			if (w0 == guess)
-				w0 = 3'd7;
-			if (w1 == guess)
-				w1 = 3'd7;
-			if (w2 == guess)
-				w2 = 3'd7;
-			if (w3 == guess)
-				w3 = 3'd7;
-		end else if (guess == w3) begin
-			white_peg = 3'd1;
-			if (w0 == guess)
-				w0 = 3'd7;
-			if (w1 == guess)
-				w1 = 3'd7;
-			if (w2 == guess)
-				w2 = 3'd7;
-			if (w3 == guess)
-				w3 = 3'd7;
-		end 
+		end
 	
 //		case (num)
 //			w0: begin
@@ -207,7 +210,7 @@ end
 //			end
 //		endcase
 	
-	endfunction
+	endtask
 	
 	// Removes a found white peg number from the entire list of possible white pegs
 	// Avoids multiple white pegs for repeated numbers
